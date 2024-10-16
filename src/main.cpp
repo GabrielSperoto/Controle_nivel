@@ -20,6 +20,7 @@ float nivel_alto = 0; //nivel maximo do tanque
 bool flag;
 bool estado_bomba;
 bool shutdown;
+//teste 2
 
 UltraSonicDistanceSensor distanceSensor(TRIGGER,ECHO); //função para calcular a distância entre o nível da água e o sensor
 
@@ -107,6 +108,7 @@ void loop() {
         digitalWrite(LED_AMARELO,LOW);
       }
     }
+    
 
 
 }
