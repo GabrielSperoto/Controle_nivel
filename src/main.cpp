@@ -19,6 +19,7 @@ float nivel_baixo = 0; // nivel minimo do tanque;
 float nivel_alto = 0; //nivel maximo do tanque
 bool flag;
 
+//xxxxx
 
 UltraSonicDistanceSensor distanceSensor(TRIGGER,ECHO); //função para calcular a distância entre o nível da água e o sensor
 
