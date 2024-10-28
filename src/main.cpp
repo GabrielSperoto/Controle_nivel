@@ -47,22 +47,29 @@ void loop() {
   Serial.println(nivel);
   delay(200);
 
-  if(digitalRead(DESLIGA)){
-    flag = false;
-  }
-
   // obtem o nível atual da água no tanque
   
 
   //caso o nível da água esteja baixo e flag seja true ou o botão de ligar seja pressionado, ligar a bomba
+   int nivel0 = nivel;
   if((nivel <= nivel_baixo) && (digitalRead(LIGA) || flag)){
     //liga o sistema quando o nível está baixo
+    if(abs(nivel0 - nivel) >= 5){
+      digitalWrite(BOMBA,HIGH);
+      digitalWrite(LED_VERMELHO,HIGH);
+      digitalWrite(LED_VERDE,LOW);
+
+
+      digitalWrite(LED_AMARELO,HIGH);
+    } else{
+      digitalWrite(BOMBA,HIGH);
+      digitalWrite(LED_VERMELHO,HIGH);
+      digitalWrite(LED_VERDE,LOW);
+      digitalWrite(LED_AMARELO,LOW);
+    }
     flag = true;
-    digitalWrite(BOMBA,HIGH);
-    digitalWrite(LED_VERMELHO,HIGH);
-    digitalWrite(LED_VERDE,LOW);
-    digitalWrite(LED_AMARELO,LOW);
     Serial.println("ENTROU!");
+    Serial.println(nivel0);
   }
 
   else if((nivel >= nivel_alto) && (digitalRead(LIGA) || flag)){
@@ -75,7 +82,7 @@ void loop() {
     Serial.println("ENTROU ALTO!");
   }
 
-  else if(digitalRead(DESLIGA)){
+  if(digitalRead(DESLIGA)){
     flag = false;
     digitalWrite(BOMBA,LOW);
     digitalWrite(LED_VERDE,LOW);
