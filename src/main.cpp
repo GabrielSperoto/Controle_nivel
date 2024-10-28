@@ -14,9 +14,9 @@ const int BUZZER = 8;//soa quando o botão de emergência for pressionado
 const int LIGA = 9;
 const int DESLIGA = 10;
 
-float nivel_tanque = 30; // capacidade maxima do tanque
-float nivel_baixo = 10; // nivel minimo do tanque;
-float nivel_alto = 20; //nivel maximo do tanque
+float nivel_tanque = 38; // capacidade maxima do tanque
+float nivel_baixo = 5; // nivel minimo do tanque;
+float nivel_alto = 12; //nivel maximo do tanque
 bool flag;
 
 
@@ -37,6 +37,8 @@ void setup() {
   pinMode(LIGA,INPUT);
   pinMode(DESLIGA,INPUT);
 
+  digitalWrite(BOMBA,HIGH);
+
   Serial.begin(9600);
 
 }
@@ -45,37 +47,39 @@ void loop() {
   int nivel = nivel_tanque - distanceSensor.measureDistanceCm();
   Serial.print("Nivel: ");
   Serial.println(nivel);
-  delay(200);
 
   // obtem o nível atual da água no tanque
   
 
   //caso o nível da água esteja baixo e flag seja true ou o botão de ligar seja pressionado, ligar a bomba
-   int nivel0 = nivel;
   if((nivel <= nivel_baixo) && (digitalRead(LIGA) || flag)){
     //liga o sistema quando o nível está baixo
-    if(abs(nivel0 - nivel) >= 5){
-      digitalWrite(BOMBA,HIGH);
+    if(abs(nivel_baixo - nivel) >= 5){
+      digitalWrite(BOMBA,LOW);
       digitalWrite(LED_VERMELHO,HIGH);
       digitalWrite(LED_VERDE,LOW);
 
 
       digitalWrite(LED_AMARELO,HIGH);
+      digitalWrite(BUZZER,HIGH);
+      delay(200);
+      digitalWrite(LED_AMARELO,LOW);
+      digitalWrite(BUZZER,LOW);
+      delay(200);
     } else{
-      digitalWrite(BOMBA,HIGH);
+      digitalWrite(BOMBA,LOW);
       digitalWrite(LED_VERMELHO,HIGH);
       digitalWrite(LED_VERDE,LOW);
       digitalWrite(LED_AMARELO,LOW);
     }
     flag = true;
     Serial.println("ENTROU!");
-    Serial.println(nivel0);
   }
 
   else if((nivel >= nivel_alto) && (digitalRead(LIGA) || flag)){
     //desliga o sistema caso o nível da água esteja alto
     flag = true;
-    digitalWrite(BOMBA,LOW);
+    digitalWrite(BOMBA,HIGH);
     digitalWrite(LED_VERDE,HIGH);
     digitalWrite(LED_VERMELHO,LOW);
     digitalWrite(LED_AMARELO,LOW);
@@ -84,7 +88,7 @@ void loop() {
 
   if(digitalRead(DESLIGA)){
     flag = false;
-    digitalWrite(BOMBA,LOW);
+    digitalWrite(BOMBA,HIGH);
     digitalWrite(LED_VERDE,LOW);
     digitalWrite(LED_VERMELHO,LOW);
     digitalWrite(LED_AMARELO,LOW);
