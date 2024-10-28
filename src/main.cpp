@@ -44,8 +44,8 @@ void loop() {
 
   int nivel = nivel_tanque - distanceSensor.measureDistanceCm();
   Serial.print("Nivel: ");
-  Serial.println(distanceSensor.measureDistanceCm());
-  delay(1000);
+  Serial.println(nivel);
+  delay(200);
 
   if(digitalRead(DESLIGA)){
     flag = false;
@@ -63,25 +63,25 @@ void loop() {
     digitalWrite(LED_VERDE,LOW);
     digitalWrite(LED_AMARELO,LOW);
     Serial.println("ENTROU!");
-    delay(1000);
   }
 
   else if((nivel >= nivel_alto) && (digitalRead(LIGA) || flag)){
     //desliga o sistema caso o nível da água esteja alto
+    flag = true;
     digitalWrite(BOMBA,LOW);
     digitalWrite(LED_VERDE,HIGH);
     digitalWrite(LED_VERMELHO,LOW);
     digitalWrite(LED_AMARELO,LOW);
     Serial.println("ENTROU ALTO!");
-    delay(1000);
   }
 
   else if(digitalRead(DESLIGA)){
+    flag = false;
     digitalWrite(BOMBA,LOW);
     digitalWrite(LED_VERDE,LOW);
     digitalWrite(LED_VERMELHO,LOW);
     digitalWrite(LED_AMARELO,LOW);
-    }
+  }
   
 
 
