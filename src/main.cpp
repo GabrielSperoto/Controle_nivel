@@ -19,6 +19,8 @@ float nivel_baixo = 5; // nivel minimo do tanque;
 float nivel_amarelo = 6; // nivel para ligar o amarelo
 float nivel_alto = 8; //nivel maximo do tanque
 bool flag = false;
+bool flag2;
+float nivel;
 
 void ligarPinos(bool bomba, bool led_verm, bool led_verd, bool led_amar) {
   digitalWrite(BOMBA, bomba);
@@ -26,14 +28,6 @@ void ligarPinos(bool bomba, bool led_verm, bool led_verd, bool led_amar) {
   digitalWrite(LED_VERMELHO, led_verm);
   digitalWrite(LED_AMARELO, led_amar);
 }
-
-void pisca_amarelo(){
-  digitalWrite(LED_AMARELO,HIGH);
-  delay(200);
-  digitalWrite(LED_AMARELO,LOW);
-  delay(200);
-}
-
 
 
 UltraSonicDistanceSensor distanceSensor(TRIGGER,ECHO); //função para calcular a distância entre o nível da água e o sensor
@@ -60,41 +54,41 @@ void setup() {
 }
 void loop() {
 
-  float nivel = nivel_tanque - distanceSensor.measureDistanceCm();
+  nivel = nivel_tanque - distanceSensor.measureDistanceCm();
   Serial.print("Nivel: ");
   Serial.println(nivel);
+  Serial.print("Media sensor: ");
   Serial.println(distanceSensor.measureDistanceCm());
   delay(200);
 
-  // obtem o nível atual da água no tanque
-  
-  if(digitalRead(LIGA)){
-    Serial.println("BOTAO FUNCIONOU. GRACAS A DEUS");
-  }
-
   if(digitalRead(DESLIGA)){
     flag = false;
+    flag2 = false;
     ligarPinos(1,0,0,0);
   }
 
   else if((nivel >= nivel_alto)  && (digitalRead(LIGA) || flag)){
-    //desliga o sistema caso o nível da água esteja alto
     flag = true;
+    flag2 = false;
     ligarPinos(1,0,1,0);
     Serial.println("ENTROU ALTO!");
   }
-  //caso o nível da água esteja baixo e flag seja true ou o botão de ligar seja pressionado, ligar a bomba
-  else if((digitalRead(LIGA) || flag)){
-    //liga o sistema quando o nível está baixo
+
+  else if((digitalRead(LIGA) || flag) && (nivel <= nivel_baixo || flag2)){
     if(nivel >= nivel_amarelo){
+      ligarPinos(0,1,0,1);
+      delay(200);
       ligarPinos(0,1,0,0);
-      pisca_amarelo();
+      delay(200);
 
     } else{
       ligarPinos(0,1,0,0);
     }
     flag = true;
+    flag2 = true;
     Serial.println("ENTROU!");
   }
+
+  delay(500);
 
 }
