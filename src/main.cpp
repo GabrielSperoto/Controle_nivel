@@ -57,7 +57,7 @@ void loop() {
   nivel = nivel_tanque - distanceSensor.measureDistanceCm();
   Serial.print("Nivel: ");
   Serial.println(nivel);
-  Serial.print("Media sensor: ");
+  Serial.print("Medida sensor: ");
   Serial.println(distanceSensor.measureDistanceCm());
   delay(200);
 
@@ -71,7 +71,6 @@ void loop() {
     flag = true;
     flag2 = false;
     ligarPinos(1,0,1,0);
-    Serial.println("ENTROU ALTO!");
   }
 
   else if((digitalRead(LIGA) || flag) && (nivel <= nivel_baixo || flag2)){
@@ -86,7 +85,6 @@ void loop() {
     }
     flag = true;
     flag2 = true;
-    Serial.println("ENTROU!");
   }
 
   delay(500);
